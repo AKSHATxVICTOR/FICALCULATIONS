@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+
   <meta charset="UTF-8">
   <title>FI Calculator</title>
   <link rel="stylesheet" href="style.css">
@@ -34,7 +37,11 @@
     <section class="card result">
       <h2>Result</h2>
       <p id="output">Enter details and click calculate</p>
+      <h3>Investment Breakdown</h3>
+      <canvas id="donutChart"></canvas>
     </section>
+    
+
   </main>
 
   <footer>
@@ -44,4 +51,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
