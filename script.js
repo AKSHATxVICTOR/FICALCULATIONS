@@ -1,4 +1,6 @@
-function calculateFI() {
+let donutChart;
+
+window.calculateFI = function () {
   const age = Number(document.getElementById("currentAge").value);
   const sip = Number(document.getElementById("sipAmount").value);
   const rate = Number(document.getElementById("returnRate").value) / 100;
@@ -17,6 +19,9 @@ function calculateFI() {
     corpus = (corpus + sip * 12) * (1 + rate);
     years++;
   }
+  const invested = sip * 12 * years;
+  const returns = corpus - invested;
+    drawDonutChart(invested, returns);
 
   const fiAge = age + years;
 
@@ -27,4 +32,28 @@ function calculateFI() {
     document.getElementById("output").innerText =
       "Target not achievable with current inputs.";
   }
+}
+
+function drawDonutChart(invested, returns) {
+  const ctx = document.getElementById("donutChart");
+
+  if (donutChart) donutChart.destroy();
+
+  donutChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Invested Amount", "Estimated Returns"],
+      datasets: [{
+        data: [invested, returns],
+        backgroundColor: ["#e6ebff", "#11e13a"],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      cutout: "70%",
+      plugins: {
+        legend: { position: "top" }
+      }
+    }
+  });
 }
