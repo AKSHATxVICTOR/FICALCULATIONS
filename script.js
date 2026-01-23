@@ -20,8 +20,8 @@ window.calculateFI = function () {
     years++;
   }
   const invested = sip * 12 * years;
-  const returns = corpus - invested;
-    drawDonutChart(invested, returns);
+  const roundedReturns = Math.round(corpus - invested);
+    drawDonutChart(invested, roundedReturns);
 
   const fiAge = age + years;
 
