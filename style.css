@@ -52,10 +52,16 @@ button {
 }
 
 .result {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   text-align: center;
+}
+
+.result h2 {
+  margin-bottom: 15px;
+}
+
+.result p {
+  font-size: 18px;
+  color: #444;
 }
 
 footer {
@@ -64,3 +70,4 @@ footer {
   background: #022c22;
   color: #d1fae5;
 }
+
