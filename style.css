@@ -71,3 +71,11 @@ footer {
   color: #d1fae5;
 }
 
+#donutChart {
+  max-width: 420px;
+  margin: 30px auto;
+  display: block;
+}
+
+
+
