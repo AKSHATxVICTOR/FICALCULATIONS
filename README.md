@@ -57,8 +57,8 @@ The platform is designed to be **informational, non-advisory, and privacy-first*
 
 The project is hosted using **GitHub Pages** for easy access and demonstration:
 
-👉 *Add your live link here*  
-`https://<your-username>.github.io/fi-calculator/`
+👉 (https://akshatxvictor.github.io/FICALCULATIONS/)  
+
 
 ---
 
