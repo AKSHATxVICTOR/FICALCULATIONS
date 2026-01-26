@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FI Calculator – SIP + Lumpsum</title>
+  <link rel="stylesheet" href="portfolio.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>FI Calculator</h1>
+        <p>Financial Independence & Retirement Age Calculator</p>
+        <p2>For Portfolio Calculations</p2>
+    </header>
+    <main>
+        <section class="card">
+          <h2>Enter Your Details</h2>
+    
+          <label>Current Age*</label>
+          <input type="number" id="currentAge">
+    
+          <label>Monthly SIP Amount (₹)*</label>
+          <input type="number" id="sipAmount">
+    
+          <label>SIP Step-up Percentage (%) </label>
+          <input type="number" id="stepUp" >
+    
+          <label>Lumpsum Investment Amount (₹)*</label>
+          <input type="number" id="lumpsumAmount">
+    
+          <label>Expected Annual Return (%)*</label>
+          <input type="number" id="returnRate">
+    
+          <label>Target Retirement Corpus (₹)*</label>
+          <input type="number" id="targetCorpus">
+    
+          <button onclick="window.calculatePortfolioFI()">Calculate FI Age</button>
+        </section>
+        
+        <section class="card result">
+            <h2>Result</h2>
+            <p id="output">Enter details and click calculate</p>
+            <h3>Investment Breakdown</h3>
+            <canvas id="donutChart"></canvas>
+        </section>
+    </main>
+
+    <footer>
+        <p>Informational Tool – Not Financial Advice</p>
+    </footer>
+
+  <script src="portfolio.js"></script>
+</body>
+</html>

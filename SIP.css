@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+}
+
+header {
+  background: #0f766e;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px;
+  width: 100%;
+  background: #0f766e;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.result {
+  text-align: center;
+}
+
+.result h2 {
+  margin-bottom: 15px;
+}
+
+.result p {
+  font-size: 18px;
+  color: #444;
+}
+
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #05332f;
+  color: #d1fae5;
+}
+
+#donutChart {
+  max-width: 420px;
+  margin: 30px auto;
+  display: block;
+}
+

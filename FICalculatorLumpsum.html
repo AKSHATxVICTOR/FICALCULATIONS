@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="lumpsum.js"></script>
+
+  <meta charset="UTF-8">
+  <title>FI Calculator</title>
+  <link rel="stylesheet" href="lumpsum.css">
+</head>
+<body>
+    <header>
+    <h1>FI Calculator</h1>
+    <p>Financial Independence & Retirement Age Calculator</p>
+    <p2>For Lumpsum Investments</p2>
+  </header>
+    <main>
+        <section class="card">
+          <h2>Enter Your Details</h2>
+    
+          <label>Current Age*</label>
+          <input type="number" id="currentAge">
+    
+          <label>Lumpsum Investment Amount (₹)*</label>
+          <input type="number" id="lumpsumAmount">
+    
+          <label>Expected Annual Return (%)</label>
+          <input type="number" id="returnRate">
+    
+          <label>Target Retirement Corpus (₹)*</label>
+          <input type="number" id="targetCorpus">
+    
+          <button onclick="window.calculateLumpsumFI()">Calculate FI Age</button>
+        </section>
+        <section class="card result">
+      <h2>Result</h2>
+      <p id="output">Enter details and click calculate</p>
+      <h3>Investment Breakdown</h3>
+      <canvas id="donutChart"></canvas>
+    </section>
+    </main>
+
+    <footer>
+        <p>Informational Tool – Not Financial Advice</p>
+    </footer>
+
+  <script src="lumpsum.js"></script>
+</body>
+</html>
