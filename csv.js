@@ -38,54 +38,70 @@ function processFile(file) {
   document.getElementById('filenameText').textContent = file.name;
   document.getElementById('uploadFilename').classList.add('show');
 
-  const reader = new FileReader();
-  reader.onload = e => parseCSV(e.target.result);
-  reader.readAsText(file);
+  // Papa Parse handles file reading, delimiter detection,
+  // quoted fields, BOM stripping, and encoding automatically
+  Papa.parse(file, {
+    header: true,          // first row becomes object keys
+    skipEmptyLines: true,  // drop blank rows
+    dynamicTyping: false,  // keep everything as strings — we handle coercion ourselves
+    transformHeader: h => h.replace(/["']/g, '').trim().toLowerCase(),
+    complete: result => {
+      if (result.errors.length > 0) {
+        const serious = result.errors.filter(e => e.type === 'Delimiter' || e.type === 'Quotes');
+        if (serious.length > 0) {
+          showWarn(`Papa Parse flagged ${serious.length} row(s) with formatting issues — they were skipped.`);
+        }
+      }
+      parseRows(result.data);
+    },
+    error: err => showErr(`Could not read file: ${err.message}`)
+  });
 }
 
-/* ── CSV Parser ────────────────────────────────── */
-function parseCSV(raw) {
-  const lines = raw.trim().split(/\r?\n/).filter(l => l.trim() !== '');
-  if (lines.length < 2) { showErr('File is empty or has only one row.'); return; }
+/* ── Row Processor (runs after Papa Parse) ─────── */
+function parseRows(data) {
+  if (!data || data.length === 0) {
+    showErr('File is empty or could not be read.');
+    return;
+  }
 
-  const delim   = detectDelim(lines[0]);
-  const headers = splitLine(lines[0], delim).map(h => h.replace(/["']/g, '').trim().toLowerCase());
+  // All header keys are already lowercase (transformHeader above)
+  // Find which key matches each field using our candidate lists
+  const allKeys = Object.keys(data[0]);
 
   const C = {
-    name:     col(headers, ['fund name','name','scheme name','stock','security','instrument','symbol','scrip','tradingsymbol']),
-    type:     col(headers, ['type','investment type','mode','category','instrument type']),
-    invested: col(headers, ['invested amount','invested','purchase value','buy value','cost','investment','amount invested','purchase amount','avg. net amount invested']),
-    current:  col(headers, ['current value','market value','present value','ltp value','value','current amount','last price value','mktvalue']),
-    units:    col(headers, ['units','quantity','qty','shares','balance units','net quantity']),
-    nav:      col(headers, ['nav','current nav','price','ltp','last price','close']),
-    avgPrice: col(headers, ['avg price','average price','avg buy price','avg cost']),
+    name:     key(allKeys, ['fund name','name','scheme name','stock','security','instrument','symbol','scrip','tradingsymbol']),
+    type:     key(allKeys, ['type','investment type','mode','category','instrument type']),
+    invested: key(allKeys, ['invested amount','invested','purchase value','buy value','cost','investment','amount invested','purchase amount','avg. net amount invested']),
+    current:  key(allKeys, ['current value','market value','present value','ltp value','value','current amount','last price value','mktvalue']),
+    units:    key(allKeys, ['units','quantity','qty','shares','balance units','net quantity']),
+    nav:      key(allKeys, ['nav','current nav','price','ltp','last price','close']),
+    avgPrice: key(allKeys, ['avg price','average price','avg buy price','avg cost']),
   };
 
-  const rows = [];
+  const rows    = [];
   const skipped = [];
 
-  for (let i = 1; i < lines.length; i++) {
-    const cells = splitLine(lines[i], delim);
-    if (cells.length < 2) { skipped.push(i + 1); continue; }
+  data.forEach((row, i) => {
+    const name     = C.name     ? clean(row[C.name])     : `Row ${i + 1}`;
+    const typeRaw  = C.type     ? clean(row[C.type]).toLowerCase() : '';
+    let   invested = C.invested ? num(row[C.invested])   : 0;
+    let   current  = C.current  ? num(row[C.current])    : 0;
+    const units    = C.units    ? num(row[C.units])      : 0;
+    const navVal   = C.nav      ? num(row[C.nav])        : 0;
+    const avgPrice = C.avgPrice ? num(row[C.avgPrice])   : 0;
 
-    const name     = C.name     >= 0 ? clean(cells[C.name])     : `Row ${i}`;
-    const typeRaw  = C.type     >= 0 ? clean(cells[C.type]).toLowerCase() : '';
-    let   invested = C.invested >= 0 ? num(cells[C.invested])   : 0;
-    let   current  = C.current  >= 0 ? num(cells[C.current])    : 0;
-    const units    = C.units    >= 0 ? num(cells[C.units])      : 0;
-    const navVal   = C.nav      >= 0 ? num(cells[C.nav])        : 0;
-    const avgPrice = C.avgPrice >= 0 ? num(cells[C.avgPrice])   : 0;
-
+    // Derive missing values from units × nav or units × avg price
     if (current  === 0 && units > 0 && navVal   > 0) current  = +(units * navVal).toFixed(2);
     if (invested === 0 && units > 0 && avgPrice > 0) invested = +(units * avgPrice).toFixed(2);
 
-    if (!name || (invested === 0 && current === 0)) { skipped.push(i + 1); continue; }
+    if (!name || (invested === 0 && current === 0)) { skipped.push(i + 2); return; }
 
     rows.push({ name, type: mapType(typeRaw, name), invested, current });
-  }
+  });
 
   if (rows.length === 0) {
-    showErr('Could not extract holdings. Check that your CSV has columns: Fund Name, Invested Amount, Current Value.');
+    showErr('Could not extract holdings. Check your CSV has: Fund Name, Invested Amount, Current Value.');
     return;
   }
   if (skipped.length > 0) {
@@ -96,33 +112,15 @@ function parseCSV(raw) {
   renderPreview(rows);
 }
 
-/* ── Helpers: Parsing ──────────────────────────── */
-function detectDelim(line) {
-  const tabs   = (line.match(/\t/g) || []).length;
-  const commas = (line.match(/,/g)  || []).length;
-  const semis  = (line.match(/;/g)  || []).length;
-  if (tabs > commas && tabs > semis) return '\t';
-  if (semis > commas) return ';';
-  return ',';
-}
-
-function splitLine(line, d) {
-  const res = []; let cur = ''; let inQ = false;
-  for (const ch of line) {
-    if (ch === '"') { inQ = !inQ; continue; }
-    if (ch === d && !inQ) { res.push(cur.trim()); cur = ''; continue; }
-    cur += ch;
-  }
-  res.push(cur.trim());
-  return res;
-}
-
-function col(headers, candidates) {
+/* ── Column Key Finder ─────────────────────────── */
+// Instead of index-based col(), we now return the matching key string
+// because Papa Parse gives us objects (row['fund name']) not arrays (row[2])
+function key(allKeys, candidates) {
   for (const c of candidates) {
-    const i = headers.findIndex(h => h.includes(c));
-    if (i >= 0) return i;
+    const match = allKeys.find(k => k.includes(c));
+    if (match) return match;
   }
-  return -1;
+  return null;
 }
 
 function mapType(raw, name) {
