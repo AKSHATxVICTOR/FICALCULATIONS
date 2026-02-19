@@ -1,28 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
-
   <meta charset="UTF-8">
-  <title>FI Calculator</title>
-  <link rel="stylesheet" href="SIP.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FI Calculator – Choose Mode</title>
+  <link rel="stylesheet" href="fi-theme.css">
+  <style>
+    main {
+      display: block;
+      max-width: 900px;
+      padding: 56px 24px 60px;
+    }
+    .chooser-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .chooser-title {
+      font-family: var(--serif);
+      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .chooser-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media(max-width:580px){ .mode-grid{ grid-template-columns:1fr; } }
+    .mode-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 28px 24px;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      animation: fadeUp 0.45s ease both;
+    }
+    .mode-card:nth-child(1){ animation-delay:0.0s; }
+    .mode-card:nth-child(2){ animation-delay:0.06s; }
+    .mode-card:nth-child(3){ animation-delay:0.12s; }
+    .mode-card:nth-child(4){ animation-delay:0.18s; }
+    .mode-card::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:1px;
+      background: linear-gradient(90deg, transparent, rgba(46,232,154,0.2), transparent);
+    }
+    .mode-card::after {
+      content:'';
+      position:absolute; inset:0;
+      background: linear-gradient(135deg, rgba(46,232,154,0.05) 0%, transparent 60%);
+      opacity:0;
+      transition:opacity 0.2s;
+    }
+    .mode-card:hover {
+      border-color: rgba(46,232,154,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .mode-card:hover::after { opacity:1; }
+    .mode-icon {
+      font-size: 1.9rem;
+      margin-bottom: 14px;
+      display: block;
+      position: relative; z-index:1;
+    }
+    .mode-chip {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(46,232,154,0.1);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 10px;
+      position: relative; z-index:1;
+    }
+    .mode-card h3 {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 8px;
+      position: relative; z-index:1;
+    }
+    .mode-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      position: relative; z-index:1;
+    }
+    .mode-arrow {
+      margin-top: 20px;
+      color: var(--accent);
+      font-size: 1rem;
+      display: inline-block;
+      transition: transform 0.2s;
+      position: relative; z-index:1;
+    }
+    .mode-card:hover .mode-arrow { transform: translateX(5px); }
+  </style>
 </head>
 <body>
+<header>
+  <a href="index.html" class="nav-back">← Home</a>
+  <h1>FI<span class="dot">.</span>Calculator</h1>
+  <p>Financial Independence & Retirement Age Calculator</p>
+</header>
 
-  <header>
-    <h1>FI Calculator</h1>
-    <p>Financial Independence & Retirement Age Calculator</p>
-  </header>
+<main>
+  <div class="chooser-label">Get started</div>
+  <h2 class="chooser-title">Choose your calculator</h2>
+  <p class="chooser-sub">Pick the mode that matches how you invest.</p>
 
-  <main>
-    <section class = 'card'>
-        <h2>Enter Choice</h2>
-        <button onclick="window.location.href='FICalculatorLumpSum.html'">FI Calculator For Lumpsum Investemnts</button>
-        <button onclick="window.location.href='FICalculatorSIP.html'">FI Calculator with SIP Step-up</button>
-        <button onclick="window.location.href='FICalculatorSIP+Lumpsum.html'">Portfolio Calculations</button>
+  <div class="mode-grid">
+    <button class="mode-card" onclick="location.href='FICalculatorSIP.html'">
+      <span class="mode-icon">📈</span>
+      <div class="mode-chip">SIP</div>
+      <h3>SIP with Step-Up</h3>
+      <p>Monthly SIP with annual step-up. Best for salaried investors with growing income.</p>
+      <div class="mode-arrow">→</div>
+    </button>
 
-    </section>
-  </main>
+    <button class="mode-card" onclick="location.href='FICalculatorLumpsum.html'">
+      <span class="mode-icon">💰</span>
+      <div class="mode-chip">Lumpsum</div>
+      <h3>Lump Sum Investment</h3>
+      <p>One-time investment compounded over time. Great for windfalls or bonuses.</p>
+      <div class="mode-arrow">→</div>
+    </button>
+
+    <button class="mode-card" onclick="location.href='FICalculatorSIP+Lumpsum.html'">
+      <span class="mode-icon">🗂️</span>
+      <div class="mode-chip">Portfolio</div>
+      <h3>SIP + Lump Sum</h3>
+      <p>Combine a starting corpus with ongoing monthly SIPs for a realistic projection.</p>
+      <div class="mode-arrow">→</div>
+    </button>
+
+    <button class="mode-card" onclick="location.href='FICalculatorCSV.html'">
+      <span class="mode-icon">📂</span>
+      <div class="mode-chip">CSV Upload</div>
+      <h3>CSV / Excel Import</h3>
+      <p>Upload your real holdings from Zerodha, Groww, or Kuvera for a live FI calculation.</p>
+      <div class="mode-arrow">→</div>
+    </button>
+  </div>
+</main>
+
+<footer>
+  <p>FI Calculator © 2026 &nbsp;·&nbsp; Informational Tool – Not Financial Advice</p>
+</footer>
 </body>
 </html>

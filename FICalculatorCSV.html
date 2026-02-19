@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FI Calculator – CSV Portfolio Upload</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="fi-theme.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header>
+  <a href="page1.html" class="nav-back">← Back</a>
+  <h1>FI<span class="dot">.</span>Calculator</h1>
+  <p>Financial Independence & Retirement Age Calculator</p>
+  <span class="page-tag">CSV / Excel Portfolio Upload</span>
+</header>
+
+<main id="csvMain">
+
+  <!-- ── Row 1: Upload + FI Parameters ── -->
+  <div class="two-col">
+
+    <div class="card">
+      <h2>Upload Portfolio CSV</h2>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="csvFile" accept=".csv,.txt,.xlsx,.xls" onchange="handleFile(event)">
+        <div class="upload-icon">📂</div>
+        <strong>Click or drag & drop your file</strong>
+        <span>Zerodha · Groww · Kuvera · Paytm Money · HDFC Sky</span>
+        <div class="upload-formats">.csv &nbsp;·&nbsp; .txt &nbsp;·&nbsp; .xlsx</div>
+        <div class="upload-filename" id="uploadFilename">✓ <span id="filenameText"></span></div>
+      </div>
+
+      <div class="msg msg-error" id="msgError"></div>
+      <div class="msg msg-warn"  id="msgWarn"></div>
+
+      <button class="sample-btn" onclick="downloadSample()">⬇ Download Sample CSV</button>
+
+      <div class="broker-guide">
+        <strong>Export steps:</strong><br>
+        • <strong>Zerodha:</strong> Console → Portfolio → Holdings → Download<br>
+        • <strong>Groww:</strong> Portfolio → My Portfolio → Export<br>
+        • <strong>Kuvera:</strong> Reports → Holdings → Export CSV<br>
+        • <strong>Paytm Money:</strong> Portfolio → Download Report<br><br>
+        CSV must have columns for: <em>Name, Invested Amount, Current Value</em>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>FI Parameters</h2>
+
+      <label>Current Age <span style="color:var(--accent)">*</span></label>
+      <input type="number" id="currentAge" placeholder="e.g. 30">
+
+      <label>Expected Annual Return (%) <span style="color:var(--accent)">*</span></label>
+      <input type="number" id="returnRate" placeholder="e.g. 12">
+
+      <label>Target Retirement Corpus (₹) <span style="color:var(--accent)">*</span></label>
+      <input type="number" id="targetCorpus" placeholder="e.g. 50000000">
+
+      <label>Additional Monthly SIP (₹) <span class="optional-tag">optional</span></label>
+      <input type="number" id="monthlySIP" placeholder="e.g. 10000">
+
+      <label>SIP Annual Step-Up (%) <span class="optional-tag">optional</span></label>
+      <input type="number" id="sipStepUp" placeholder="e.g. 10">
+
+      <button onclick="calculate()">Calculate FI Age →</button>
+      <button class="btn-reset" onclick="resetAll()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- ── Portfolio Preview ── -->
+  <div id="previewSection" class="hidden">
+    <div class="card section-gap">
+      <h2>Portfolio Preview</h2>
+      <div class="summary-strip" id="summaryStrip"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fund / Stock</th>
+              <th>Type</th>
+              <th>Invested (₹)</th>
+              <th>Current Value (₹)</th>
+              <th>Return</th>
+            </tr>
+          </thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Results ── -->
+  <div id="resultsSection" class="hidden">
+    <div class="fi-hero section-gap">
+      <div class="fi-label">Your Financial Independence Age</div>
+      <div class="fi-number" id="fiNumber">--</div>
+      <div class="fi-sub"   id="fiSub"></div>
+      <div class="fi-fail"  id="fiFail"></div>
+    </div>
+
+    <div class="result-row">
+      <div class="card" style="text-align:center;">
+        <h2>Corpus Breakdown</h2>
+        <canvas id="csvDonut"></canvas>
+      </div>
+      <div class="card">
+        <h2>Projection Details</h2>
+        <table class="proj-table" id="projTable"></table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>FI Calculator © 2026 &nbsp;·&nbsp; Informational Tool – Not Financial Advice</p>
+</footer>
+
+<script src="csv.js"></script>
+</body>
+</html>

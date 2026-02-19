@@ -59,14 +59,14 @@ function drawDonutChart(invested, returns) {
       labels: ["Invested Amount", "Estimated Returns"],
       datasets: [{
         data: [invested, returns],
-        backgroundColor: ["#e6ebff", "#11e13a"],
+        backgroundColor: ["#182219", "#2ee89a"],
         borderWidth: 0
       }]
     },
     options: {
       cutout: "70%",
       plugins: {
-        legend: { position: "top" }
+        legend: { position: "top", labels: { color: "#e4ede8", font: { family: "DM Sans" } } }
       }
     }
   });

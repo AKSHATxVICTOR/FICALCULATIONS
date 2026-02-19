@@ -15,7 +15,7 @@ window.calculateLumpsumFI = function () {
   let age = currentAge;
   let corpus = lumpsum;
 
-  while (corpus < targetCorpus && age < 100) {
+  while (corpus < targetCorpus && age < 60) {
     corpus = corpus * (1 + returnRate);
     age++;
   }
@@ -39,14 +39,14 @@ function drawDonutChart(invested, returns) {
       labels: ["Invested Amount", "Estimated Returns"],
       datasets: [{
         data: [Math.round(invested), Math.round(returns)],
-        backgroundColor: ["#e6ebff", "#11e13a"],
+        backgroundColor: ["#182219", "#2ee89a"],
         borderWidth: 0
       }]
     },
     options: {
       cutout: "70%",
       plugins: {
-        legend: { position: "top" }
+        legend: { position: "top", labels: { color: "#e4ede8", font: { family: "DM Sans" } } }
       }
     }
   });
